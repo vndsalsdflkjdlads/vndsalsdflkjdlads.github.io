@@ -1,2 +1,70 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title>tags | can't</title><meta name="description" content="tags - asperitas"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/theme.css"><link rel="search" type="application/opensearchdescription+xml" href="/atom.xml" title="can't"><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="can't" type="application/atom+xml">
-</head><body><div class="wrap"><header><h1 class="branding"><a href="/" title="can't"><img class="logo-image" src="/logo.png" alt="logo"></a></h1><ul class="nav nav-list"><li class="nav-list-item"><a class="nav-list-link" href="/" target="_self">主页</a></li><li class="nav-list-item"><a class="nav-list-link" href="/archives" target="_self">归档</a></li><li class="nav-list-item"><a class="nav-list-link" href="https://weibo.com/u/7798906798" target="_blank">微博</a></li><li class="nav-list-item"><a class="nav-list-link" href="/atom.xml" target="_self">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">tags</h1><div class="post-info"><a></a>2023-02-23</div><div class="post-content"></div></article></div></main><footer><div class="paginator"></div><div class="copyright"><p>&copy; 2023 <a href="http://example.com">asperitas</a>.<br>Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> &amp; <a href="https://github.com/Dreyer/hexo-theme-artemis" target="_blank">Artemis</a>.</p></div></footer></div></body></html>
+{% extends '_layout.swig' %}
+{% import '_macro/sidebar.swig' as sidebar_template %}
+
+  {% block title %}{#
+  #}{% set page_title_suffix = ' | ' + config.title %}{#
+
+  #}{% if page.type === "categories" and not page.title %}{#
+    #}{{ __('title.category') + page_title_suffix }}{#
+  #}{% elif page.type === "tags" and not page.title %}{#
+    #}{{ __('title.tag') + page_title_suffix }}{#
+  #}{% else %}{#
+    #}{{ page.title + page_title_suffix }}{#
+  #}{% endif %}{#
+#}{% endblock %}
+
+{% block page_class %}page-post-detail{% endblock %}
+
+{% block content %}
+
+  <div id="posts" class="posts-expand">
+    {##################}
+    {### PAGE BLOCK ###}
+    {##################}
+    <div class="post-block page">
+      {% include '_partials/page-header.swig' %}
+      {#################}
+      {### PAGE BODY ###}
+      {#################}
+      <div class="post-body{% if theme.han %} han-init-context{% endif %}{% if page.direction && page.direction.toLowerCase() === 'rtl' %} rtl{% endif %}">
+        {# tagcloud page support #}
+        {% if page.type === "tags" %}
+          <div class="tag-cloud">
+            <div class="tag-cloud-title">
+                {{ _p('counter.tag_cloud', site.tags.length) }}
+            </div>
+            <div class="tag-cloud-tags">
+              {{ tagcloud({min_font: 12, max_font: 30, amount: 300, color: true, start_color: '#ccc', end_color: '#111'}) }}
+            </div>
+          </div>
+        {% elif page.type === 'categories' %}
+          <div class="category-all-page">
+            <div class="category-all-title">
+                {{ _p('counter.categories', site.categories.length) }}
+            </div>
+            <div class="category-all">
+              {{ list_categories() }}
+            </div>
+          </div>
+        {% else %}
+          {{ page.content }}
+        {% endif %}
+      </div>
+      {#####################}
+      {### END PAGE BODY ###}
+      {#####################}
+    </div>
+    {######################}
+    {### END PAGE BLOCK ###}
+    {######################}
+  </div>
+
+{% endblock %}
+
+{% block sidebar %}
+  {{ sidebar_template.render(false) }}
+{% endblock %}
+
+{% block script_extra %}
+  {% include '_scripts/pages/post-details.swig' %}
+{% endblock %}
